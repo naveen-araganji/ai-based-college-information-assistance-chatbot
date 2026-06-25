@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Report</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <style>
+      .page-wrap { display:flex; align-items:top; justify-content:center; min-height:100vh; padding: 20px; }
+      .report-card { width: 95%; max-width: 1000px; height: 90vh; max-height: 700px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 24px 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.25); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; }
+      .report-container { max-width: 100%; margin: 0 auto; padding: 0; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+      .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; margin-right: 25px;}
+      .filter-grid label { display: block; font-size: 16px; font-weight: 600; margin-bottom: 6px; color: #374151; }
+      .filter-grid select, .filter-grid input { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; }
+      .report-actions { display: flex; gap: 10px; margin-bottom: 16px; }
+      .btn { padding: 10px 14px; border-radius: 8px; border: none; cursor: pointer; font-size: 20px; font-weight: 600; }
+      .btn-primary { padding: 10px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;background: #0b6ed8; color: #fff; }
+      .btn-primary:hover { padding: 10px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;background: #015dc0; color: #fff; }
+      .table-wrapper { flex: 1; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; min-height: 0; }
+      .table { width: 100%; border-collapse: collapse; }
+      .table thead { position: sticky; top: 0; z-index: 10; }
+      .table th, .table td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-size: 14px; }
+      .table th { background: #f3f4f6; }
+      .muted { color: #6b7280; font-size: 13px; }
+      .highlight-low { background: #fef2f2; }
+    </style>
+  </head>
+  <body style="background-image: url('/static/clg.png'); background-size: cover; background-repeat: no-repeat; background-position: center; height: 100vh; margin: 0;">
+    <div style="backdrop-filter: blur(6px); min-height: 100vh;" class="page-wrap">
+      <div class="report-card">
+        <div class="report-container">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px;">
+            <h2 style="margin:0; color:#1f2937">Attendance Report</h2>
+            <button id="close-btn" class="btn" onclick="window.location.href='/'">×</button>
+          </div>
+
+        <div class="filter-grid">
+          <div>
+            <label for="department">Department</label>
+            <select id="department">
+              <option value="">Select Department</option>
+              <option value="electronics and communication engineering">Electronics and Communication Engineering</option>
+              <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="electrical and electronics engineering">Electrical and Electronics Engineering</option>
+              <option value="industrial engineering and management">industrial engineering and management</option>
+              <option value="electronics and instrumentation engineering">electronics and instrumentation engineering</option>
+              <option value="electronics and telecommunication engineering">electronics and telecommunication engineering</option>
+              <option value="information science and engineering">information science and engineering</option>
+              <option value="medical electronics engineering">medical electronics engineering</option>
+              <option value="computer science and business systems">computer science and business systems</option>
+              <option value="artificial intelligence and machine learning">artificial intelligence and machine learning</option>
+              <option value="aeronautical engineering">aeronautical engineering</option>
+              <option value="business administration">MBA</option>
+              <option value="computer applications">MCA</option>
+              <option value="mathematics">mathematics</option>
+              <option value="physics">physics</option>
+              <option value="chemistry">chemistry</option>
+            </select>
+          </div>
+          <div>
+            <label for="semester">Semester</label>
+            <select id="semester">
+              <option value="">Select Semester</option>
+              <option value="1">1st Semester</option>
+              <option value="2">2nd Semester</option>
+              <option value="3">3rd Semester</option>
+              <option value="4">4th Semester</option>
+              <option value="5">5th Semester</option>
+              <option value="6">6th Semester</option>
+              <option value="7">7th Semester</option>
+              <option value="8">8th Semester</option>
+            </select>
+          </div>
+          <div>
+            <label for="section">Section</label>
+            <select id="section">
+              <option value="">Select Section</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </div>
+          <div>
+            <label for="subject">Subject</label>
+            <input id="subject" placeholder="Enter subject code" />
+          </div>
+        </div>
+
+        <div class="report-actions">
+          <button class="btn-primary" id="load-report">Load Report</button>
+        </div>
+
+        <div id="results-info" class="muted"></div>
+        <div class="table-wrapper">
+          <table class="table" id="results-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>USN</th>
+                <th>Student Name</th>
+                <th>Attended</th>
+                <th>Total Classes</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Auth guard
+      document.addEventListener('DOMContentLoaded', function(){
+        const authUser = JSON.parse(localStorage.getItem('authUser') || 'null');
+        if (!authUser || authUser.role !== 'faculty') {
+          alert('Access denied. Faculty login required.');
+          window.location.href = '/';
+          return;
+        }
+
+        document.getElementById('load-report').addEventListener('click', loadReport);
+      });
+
+      async function loadReport(){
+        const department = document.getElementById('department').value;
+        const semester = parseInt(document.getElementById('semester').value);
+        const section = document.getElementById('section').value;
+        const subject = document.getElementById('subject').value.trim();
+
+        if (!department || !semester || !section || !subject) {
+          alert('Please fill all fields.');
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/attendance-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ department, semester, section, subject })
+          });
+          const data = await res.json();
+          if (!data.success) { alert(data.message || 'Failed'); return; }
+          renderResults(data.results);
+        } catch (e) {
+          console.error(e);
+          alert('Failed to load report');
+        }
+      }
+
+      function renderResults(rows){
+        const info = document.getElementById('results-info');
+        const table = document.getElementById('results-table');
+        const wrapper = table.closest('.table-wrapper');
+        const tbody = table.querySelector('tbody');
+        tbody.innerHTML = '';
+        
+        if (rows.length) {
+          table.style.display = 'table';
+          wrapper.style.display = 'block';
+        } else {
+          table.style.display = 'none';
+          wrapper.style.display = 'none';
+        }
+        
+        info.textContent = rows.length ? `${rows.length} students found` : 'No records found';
+
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          if ((r.percentage || 0) < 75) tr.classList.add('highlight-low');
+          tr.innerHTML = `
+            <td>${r.usn || ''}</td>
+            <td>${r.student_name || ''}</td>
+            <td>${r.attended || 0}</td>
+            <td>${r.total_classes || 0}</td>
+            <td>${(r.percentage ?? 0)}%</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    </script>
+  </body>
+</html>

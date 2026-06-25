@@ -1,0 +1,363 @@
+body {
+        background-image: url("clg.png");
+        background-size: cover; /* Make image cover entire page */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-position: center; /* Center the image */
+        height: 100vh;
+      }
+
+      /* ===== Header Controls ===== */
+      #chatbot-header {
+        background: rgb(35, 44, 162);
+        backdrop-filter: blur(0px);
+        padding: 15px;
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        font-family:'Franklin Gothic Medium ';
+        font-size: 17px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #header-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      #role-badge {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-family: 'Segoe UI', sans-serif;
+      }
+      #login-btn { 
+        color: #fff; 
+        background: rgba(255,255,255,0.1); 
+        border: none;
+        border-radius: 50%; 
+        padding: 4px; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      #login-btn:hover { 
+        background: rgba(255,255,255,0.2); 
+        transform: scale(1.05); 
+      }
+
+      /* ===== Widget Button ===== */
+
+#chatbot-toggle {
+        position: fixed;
+        bottom: 0px;
+        right: 50px;
+        width: 160px;
+        height: 60px;
+        background: #0b6ed8;
+        color: white;
+        border-radius: 15px 15px 0 0;
+        border: none;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        padding-left: 15px;
+        font-family:'Times New Roman', Times, serif;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        z-index: 999;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+}
+
+      #chatbot-toggle:hover {
+        background: #015dc0;
+        transform: scale(1.05);
+      }
+
+      /* ===== Chat Window ===== */
+      #chatbot-container {
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        width: 420px;
+        height: 570px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        background: rgba(235, 235, 235, 0.511);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 999;
+      }
+
+
+      /* ===== Messages Area ===== */
+      #chatbot-messages {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .message { margin-bottom: 0; padding: 10px 14px; border-radius: 12px; max-width: 85%; line-height: 1.5; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+      .message.user { background: #2563eb; color: #fff; }
+      .message.bot { background: #ffffff; color: #1f2937; border: 1px solid rgba(0,0,0,0.06); }
+
+      .bot .bot-choice-container { margin-top: 8px; }
+
+      .user { align-self: flex-end; margin-left: auto; }
+      .bot { align-self: flex-start; margin-right: auto; }
+
+      /* ===== Input Area ===== */
+      #chatbot-input-area {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background: rgb(194, 194, 194);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      #chatbot-input {
+        flex: 1;
+        padding: 10px 14px;
+        margin: 0 8px;
+        border: none;
+        border-radius: 18px;
+        font-size: 14px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.3);
+        color: #000;
+      }
+
+      #send-btn {
+        background: transparent;
+        border: none;
+        font-size: 25px;
+        padding-bottom: 5px;
+        cursor: pointer;
+        color: #333;
+        transition: transform 0.2s;
+      }
+
+        #mic-btn {
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        padding-top: 5px;
+        cursor: pointer;
+        color: #333;
+        transition: transform 0.2s;
+      }
+
+      #send-btn:hover,
+      #mic-btn:hover {
+        transform: scale(1.2);
+      }
+
+      /* Auth modals */
+      .login-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        display: none;
+        z-index: 2000;
+      }
+      .login-modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .auth-container { 
+        position: relative;
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        width: 100%;
+        height: 100%;
+      }
+      .auth-card { 
+        width: 360px; 
+        background: rgba(255,255,255,0.95); 
+        border-radius: 16px; 
+        padding: 24px; 
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3); 
+        font-family: 'Segoe UI', sans-serif; 
+        position: relative;
+      }
+      .auth-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .auth-header h2 { margin: 0; color: #1f2937; }
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 50%;
+        transition: all 0.2s;
+        line-height: 1;
+      }
+      .close-btn:hover {
+        background: #f3f4f6;
+        color: #374151;
+        transform: scale(1.1);
+      }
+      .auth-card label { display:block; margin-top: 10px; font-size: 14px; color: #374151; }
+      .auth-card input { width: 93%; padding: 10px 12px; border-radius: 10px; border: 1px solid #d1d5db; margin-top: 6px; background: #fff; }
+      .auth-card select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #d1d5db; margin-top: 6px; background: #fff; }
+      .auth-btn { margin-top: 14px; width: 100%; padding: 10px 12px; border-radius: 10px; background: #0b6ed8; color: #fff; border: none; cursor: pointer; font-weight: 500; }
+      .auth-btn:hover { background: #015dc0; }
+      .auth-note { font-size: 13px; margin-top: 10px; text-align: center; }
+      .auth-note a { color: #0b6ed8; text-decoration: none; }
+      .auth-note a:hover { text-decoration: underline; }
+
+
+      .faculty-card {
+      display: flex;
+      justify-content: center;
+      margin: 15px 0;
+      }
+
+.card-glass {
+  background: rgba(195, 195, 195, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  color: #1a1a1a;
+}
+.faculty-photo {
+  width: 130px;
+  height: 150px;
+  border-radius: 15%;
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+.faculty-name {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 5px;
+  color: #2c3e50;
+}
+.faculty-dept {
+  font-size: 14px;
+}
+.faculty-designation .faculty-dept .faculty-contact, .faculty-email{
+margin-bottom: 4px;
+}
+.faculty-contact, .faculty-email {
+  font-size: 14px;
+  margin: 4px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+
+.department-card {
+    background: rgba(195, 195, 195, 0.2);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    max-width: 400px;
+}
+.department-name {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #102b45;
+    text-align: center;
+}
+.department-overview {
+    text-align: justify;
+}
+.department-hod, .department-mail, .department-phone{
+    padding-top: 5px;
+}
+.department-card a {
+    color: #023e76;
+    text-decoration: none;
+}
+
+.bot-choice-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 0px;
+}
+.bot-choice-message {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+.bot-choice-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+.bot-choice-buttons button {
+  background: #f8fafc; 
+  border: 1px solid #2c87ff; 
+  border-radius: 15px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #475569;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  flex: 0 0 calc(50% - 4px);
+}
+.bot-choice-buttons button:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 14px;
+}
+.result-table th, .result-table td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: left;
+}
+.result-table th {
+  background-color: #f5f5f5;
+}

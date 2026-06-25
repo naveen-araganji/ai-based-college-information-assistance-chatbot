@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Attendance</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <style>
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+      .form-group label {
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #374151;
+      }
+      .form-group input,
+      .form-group select {
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .students-container {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 15px;
+        background: #f9fafb;
+      }
+      .student-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        background: white;
+        margin-bottom: 8px;
+        border-radius: 6px;
+      }
+      .student-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      .student-info {
+        flex: 1;
+      }
+      .student-name {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 4px;
+      }
+      .student-details {
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .attendance-options {
+        display: flex;
+        gap: 15px;
+      }
+      .radio-group {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .radio-group input[type="radio"] {
+        margin: 0;
+      }
+      .radio-group label {
+        margin: 0;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .submit-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+      .success-message {
+        display: none;
+        color: #10b981;
+        text-align: center;
+        margin-top: 15px;
+        font-weight: 600;
+        font-size: 16px;
+        background: #ecfdf5;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #10b981;
+      }
+      .load-btn {
+        width: 100%;
+        padding: 12px;
+        background: #0b6ed8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+      .load-btn:hover {
+        background: #015dc0;
+      }
+      .load-btn:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+      .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: #10b981;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .submit-btn:hover {
+        background: #059669;
+      }
+      .submit-btn:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body style="background-image: url('/static/clg.png'); background-size: cover; background-repeat: no-repeat; background-position: center; height: 100vh; margin: 0; padding: 0;">
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;">
+      <div style="width: 95%; max-width: 900px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-radius: 16px; padding: 30px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); font-family: 'Segoe UI', sans-serif; position: relative;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+          <h2 style="margin: 0; color: #1f2937; font-size: 24px;">Take Student Attendance</h2>
+          <button id="close-btn" style="background: none; border: none; font-size: 24px; color: #6b7280; cursor: pointer; padding: 4px 8px; border-radius: 50%; transition: all 0.2s;" onmouseover="this.style.background='#f3f4f6'; this.style.color='#374151';" onmouseout="this.style.background='none'; this.style.color='#6b7280';" title="Close">×</button>
+        </div>
+
+        <!-- Selection Form -->
+        <div id="selection-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="attendance-date">Date</label>
+              <input type="date" id="attendance-date" required />
+            </div>
+            
+            <div class="form-group">
+              <label for="attendance-department">Department</label>
+              <select id="attendance-department" required>
+                <option value="">Select Department</option>
+                <option value="electronics and communication engineering">Electronics and Communication Engineering</option>
+                <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="electrical and electronics engineering">Electrical and Electronics Engineering</option>
+                <option value="industrial engineering and management">industrial engineering and management</option>
+                <option value="electronics and instrumentation engineering">electronics and instrumentation engineering</option>
+                <option value="electronics and telecommunication engineering">electronics and telecommunication engineering</option>
+                <option value="information science and engineering">information science and engineering</option>
+                <option value="medical electronics engineering">medical electronics engineering</option>
+                <option value="computer science and business systems">computer science and business systems</option>
+                <option value="artificial intelligence and machine learning">artificial intelligence and machine learning</option>
+                <option value="aeronautical engineering">aeronautical engineering</option>
+                <option value="business administration">MBA</option>
+                <option value="computer applications">MCA</option>
+                <option value="mathematics">mathematics</option>
+                <option value="physics">physics</option>
+                <option value="chemistry">chemistry</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="attendance-semester">Semester</label>
+              <select id="attendance-semester" required>
+                <option value="">Select Semester</option>
+                <option value="1">1st Semester</option>
+                <option value="2">2nd Semester</option>
+                <option value="3">3rd Semester</option>
+                <option value="4">4th Semester</option>
+                <option value="5">5th Semester</option>
+                <option value="6">6th Semester</option>
+                <option value="7">7th Semester</option>
+                <option value="8">8th Semester</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="attendance-section">Section</label>
+              <select id="attendance-section" required>
+                <option value="">Select Section</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+                <option value="D">Section D</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="attendance-subject">Subject</label>
+              <input type="text" id="attendance-subject" placeholder="Enter subject code" required />
+            </div>
+            
+            <div class="form-group">
+              <label for="class-hour">Class Hour</label>
+              <select id="class-hour" required>
+                <option value="">Select Class Hour</option>
+                <option value="1">1st Hour (9:00 - 9:55)</option>
+                <option value="2">2nd Hour (9:55 - 10:50)</option>
+                <option value="3">3rd Hour (11:10 - 12:05)</option>
+                <option value="4">4th Hour (12:05 - 1:00)</option>
+                <option value="5">5th Hour (1:45 - 2:40)</option>
+                <option value="6">6th Hour (2:40 - 3:35)</option>
+                <option value="7">7th Hour (3:25 - 4:30)</option>
+              </select>
+            </div>
+          </div>
+          
+          <button type="button" class="load-btn" onclick="loadStudents()">Load Students</button>
+        </div>
+
+        <!-- Students List -->
+        <div id="students-section" style="display: none;">
+          <h3 style="margin-bottom: 15px; color: #1f2937;">Mark Attendance</h3>
+          <div id="students-list" class="students-container">
+            <!-- Students will be loaded here -->
+          </div>
+          
+          <div class="submit-section">
+            <button type="button" class="submit-btn" onclick="submitAttendance()">Submit Attendance</button>
+          </div>
+        </div>
+
+        <div id="success-message" class="success-message">
+          ✅ Successfully uploaded!
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Wait for DOM to be fully loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        let students = [];
+        let attendanceData = [];
+
+        // Get faculty email from localStorage
+        const authUser = JSON.parse(localStorage.getItem('authUser') || 'null');
+        if (!authUser || authUser.role !== 'faculty') {
+          alert('Access denied. Faculty login required.');
+          window.location.href = '/';
+          return;
+        }
+
+        // Set today's date as default
+        document.getElementById('attendance-date').value = new Date().toISOString().split('T')[0];
+
+        // Close button functionality
+        document.getElementById('close-btn').addEventListener('click', function(){
+          console.log('Close button clicked'); // Debug log
+          window.location.href = '/';
+        });
+
+        async function loadStudents() {
+          console.log('loadStudents function called');
+          
+          const date = document.getElementById('attendance-date').value;
+          const department = document.getElementById('attendance-department').value;
+          const semester = parseInt(document.getElementById('attendance-semester').value);
+          const section = document.getElementById('attendance-section').value;
+          const subject = document.getElementById('attendance-subject').value.trim();
+          const classHour = document.getElementById('class-hour').value;
+
+          console.log('Form data:', { date, department, semester, section, subject, classHour });
+
+          if (!date || !department || !semester || !section || !subject || !classHour) {
+            alert('Please fill all fields before loading students.');
+            return;
+          }
+
+          // Disable button and show loading
+          const loadBtn = document.querySelector('.load-btn');
+          loadBtn.disabled = true;
+          loadBtn.textContent = 'Loading...';
+
+          try {
+            console.log('Making API request to /api/get-students');
+            const response = await fetch('/api/get-students', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ department, semester, section })
+            });
+            
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (data.success) {
+            students = data.students;
+            // Expose globally so we can resolve student_name if needed at submit time
+            window.loadedStudents = students;
+              console.log('Students loaded:', students.length);
+              displayStudents();
+              document.getElementById('selection-form').style.display = 'none';
+              document.getElementById('students-section').style.display = 'block';
+            } else {
+              alert(`Error: ${data.message}`);
+            }
+          } catch (error) {
+            console.error('Detailed error:', error);
+            alert(`Failed to load students: ${error.message}`);
+          } finally {
+            // Re-enable button
+            loadBtn.disabled = false;
+            loadBtn.textContent = 'Load Students';
+          }
+        }
+
+        function displayStudents() {
+          console.log('displayStudents called with', students.length, 'students');
+          const studentsList = document.getElementById('students-list');
+          studentsList.innerHTML = '';
+
+          if (students.length === 0) {
+            studentsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #6b7280;">No students found for the selected criteria.</div>';
+            return;
+          }
+
+          students.forEach((student, index) => {
+            const studentRow = document.createElement('div');
+            studentRow.className = 'student-row';
+            studentRow.innerHTML = `
+              <div class="student-info">
+                <div class="student-name">${student.name}</div>
+                <div class="student-details">USN: ${student.usn || 'N/A'}</div>
+              </div>
+              <div class="attendance-options">
+                <div class="radio-group">
+                  <input type="radio" id="present_${index}" name="attendance_${index}" value="present" onchange="updateAttendance(${index}, 'present')">
+                  <label for="present_${index}">Present</label>
+                </div>
+                <div class="radio-group">
+                  <input type="radio" id="absent_${index}" name="attendance_${index}" value="absent" onchange="updateAttendance(${index}, 'absent')">
+                  <label for="absent_${index}">Absent</label>
+                </div>
+              </div>
+            `;
+            studentsList.appendChild(studentRow);
+          });
+        }
+
+        function updateAttendance(studentIndex, status) {
+          const student = students[studentIndex];
+          console.log(`Updating attendance for ${student.name} (${student.usn}) to ${status}`);
+          
+          // Remove existing attendance record for this student
+          attendanceData = attendanceData.filter(record => record.usn !== student.usn);
+          
+          // Add new attendance record
+          attendanceData.push({
+            date: document.getElementById('attendance-date').value,
+            department: document.getElementById('attendance-department').value,
+            semester: parseInt(document.getElementById('attendance-semester').value),
+            section: document.getElementById('attendance-section').value,
+            subject: document.getElementById('attendance-subject').value,
+            class_hour: document.getElementById('class-hour').value,
+            student_name: student.name,
+            usn: student.usn,
+            status: status,
+            faculty_email: authUser.email
+          });
+          
+          console.log('Attendance data updated:', attendanceData);
+        }
+
+        async function submitAttendance() {
+          console.log('submitAttendance called with', attendanceData.length, 'records');
+          console.log('Full attendance data:', JSON.stringify(attendanceData, null, 2));
+          
+          if (attendanceData.length === 0) {
+            alert('Please mark attendance for at least one student.');
+            return;
+          }
+
+          const submitBtn = document.querySelector('.submit-btn');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Submitting...';
+
+          try {
+            // Ensure all required fields are present
+            const validatedData = attendanceData.map(record => {
+              // Ensure student_name is present; if missing, derive from loaded students via USN
+              let studentName = record.student_name;
+              if (!studentName) {
+                const match = (window.loadedStudents || students || []).find(s => (s.usn || '').toLowerCase() === (record.usn || '').toLowerCase());
+                if (match && match.name) {
+                  studentName = match.name;
+                  console.log('Filled missing student_name from students list:', studentName, 'for USN:', record.usn);
+                }
+              }
+
+              const validated = {
+                date: record.date,
+                department: record.department,
+                semester: parseInt(record.semester),
+                section: record.section,
+                subject: record.subject,
+                student_name: studentName || '',
+                usn: record.usn,
+                status: record.status,
+                class_hour: parseInt(record.class_hour),
+                faculty_email: record.faculty_email
+              };
+              console.log('Validated record:', validated);
+              return validated;
+            });
+
+            console.log('Submitting validated attendance data:', validatedData);
+            
+            const response = await fetch('/api/add-attendance', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ attendance_data: validatedData })
+            });
+            
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error('Error response:', errorText);
+              throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+            
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (data.success) {
+              document.getElementById('success-message').style.display = 'block';
+              
+              setTimeout(() => {
+                window.location.href = '/';
+              }, 2000);
+            } else {
+              alert(`Error: ${data.message}`);
+            }
+          } catch (error) {
+            console.error('Detailed error:', error);
+            console.error('Error stack:', error.stack);
+            alert(`Failed to submit attendance: ${error.message}`);
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Attendance';
+          }
+        }
+
+        // Make functions globally accessible for onclick handlers
+        window.loadStudents = loadStudents;
+        window.updateAttendance = updateAttendance;
+        window.submitAttendance = submitAttendance;
+      }); // End of DOMContentLoaded
+    </script>
+  </body>
+</html>
