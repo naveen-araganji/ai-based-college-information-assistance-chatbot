@@ -82,8 +82,6 @@ ai-based-college-information-assistance-chatbot/
 ├── templates/
 ├── static/
 │
-├── report/
-│
 └── screenshots/
 ```
 
@@ -122,10 +120,5 @@ Our research work has been published, and the publication certificate is shown b
 ### 📜 Certificate of Publication
 
 ![Certificate of Publication](screenshots/certificate.png)
+
 ---
-
-## 📜 License
-
-This project is developed for academic and educational purposes.
-
-MIT License.
