@@ -89,11 +89,9 @@ ai-based-college-information-assistance-chatbot/
 
 ---
 
-## 📸 Screenshots
+## 🏠 Home Page
 
-### Home Page
-
-(homepage.png)
+![Home Page](screenshots/homepage.png)
 
 ---
 
@@ -110,17 +108,20 @@ ai-based-college-information-assistance-chatbot/
 
 ## 👨‍💻 Authors
 
-- Naveen Araganji
-- Sohan kunar A
+- Sohan kumar A
 - Mohan D
+- Naveen Araganji
 - Nithin N J
 
 ---
 
 ## 📄 Publication
 
-**📄 Certificate:** [Certificate of Publication](publication/Certificate_of_Publication.pdf)
+Our research work has been published, and the publication certificate is shown below.
 
+### 📜 Certificate of Publication
+
+![Certificate of Publication](screenshots/certificate.png)
 ---
 
 ## 📜 License
